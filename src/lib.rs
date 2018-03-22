@@ -5,11 +5,11 @@
 //! want to have a look at the [tutorial](./tutorial/index.html).
 
 #![warn(missing_docs)]
-#![cfg_attr(feature="clippy", feature(plugin))]
-#![cfg_attr(feature="clippy", plugin(clippy))]
+#![cfg_attr(feature = "clippy", feature(plugin))]
+#![cfg_attr(feature = "clippy", plugin(clippy))]
 
-extern crate rustc_serialize;
 extern crate num;
+extern crate rustc_serialize;
 
 use std::iter::IntoIterator;
 
@@ -75,14 +75,16 @@ pub trait Teacher<M: Model> {
     fn new_training(&self, model: &M) -> Self::Training;
 
     /// Changes `model`s coefficients so they minimize the `cost` function (hopefully)
-    fn teach_event<Y, C>(&self,
-                         training: &mut Self::Training,
-                         model: &mut M,
-                         cost: &C,
-                         features: &M::Features,
-                         truth: Y)
-        where C: Cost<Y, M::Target>,
-              Y: Copy;
+    fn teach_event<Y, C>(
+        &self,
+        training: &mut Self::Training,
+        model: &mut M,
+        cost: &C,
+        features: &M::Features,
+        truth: Y,
+    ) where
+        C: Cost<Y, M::Target>,
+        Y: Copy;
 }
 
 /// Define this trait over the target type of a classifier, to convert it into its truth type
@@ -104,15 +106,15 @@ pub trait Crisp {
 
 /// Teaches `model` all events in `history`
 pub fn learn_history<M, C, T, H, Truth>(teacher: &T, cost: &C, model: &mut M, history: H)
-    where M: Model,
-          C: Cost<Truth, M::Target>,
-          T: Teacher<M>,
-          H: IntoIterator<Item = (M::Features, Truth)>,
-          Truth: Copy
+where
+    M: Model,
+    C: Cost<Truth, M::Target>,
+    T: Teacher<M>,
+    H: IntoIterator<Item = (M::Features, Truth)>,
+    Truth: Copy,
 {
     let mut training = teacher.new_training(model);
     for (features, truth) in history {
-
         teacher.teach_event(&mut training, model, cost, &features, truth);
     }
 }

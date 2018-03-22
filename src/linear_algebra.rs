@@ -110,7 +110,6 @@ mod tests {
 
     #[test]
     fn dot() {
-
         use linear_algebra::Vector;
 
         let a = [1.0, 2.0];
